@@ -1,5 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import {getAuth} from 'firebase/auth'; // import-ujemo auth modul iz firebase-a da bismo mogli da ga koristimo u React app
+import {getFirestore} from 'firebase/firestore'; // import-ujemo firestore modul
+import {getStorage} from 'firebase/storage'; // importujemo storage modul
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,3 +20,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app); // ovde pravimo uz getAuth metodu za nas app instancu auth modula
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+export {auth, db, storage};
