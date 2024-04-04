@@ -35,7 +35,7 @@ export const AlertProvider = ({children}) => {
                 style={{
                     position: 'absolute',
                     top: 20,
-                    right: 20
+                    left: '40%'
                 }}>
                     <Toast.Body>{state.message}</Toast.Body>
             </Toast>

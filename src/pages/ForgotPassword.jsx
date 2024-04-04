@@ -54,7 +54,7 @@ function ForgotPassword() {
     }
 
     return (
-        <Container className="mt-5 custom-forgot-password-wrapper">
+        <Container className="mt-5 custom-wrapper">
             <h3 className="text-center">Forgot your password?</h3>
             <p className="text-center text-danger">{error}</p>
             <Row className="justify-content-md-center">

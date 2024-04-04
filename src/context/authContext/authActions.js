@@ -1,4 +1,4 @@
-import {createUserWithEmailAndPassword, sendPasswordResetEmail, signOut} from 'firebase/auth';
+import {createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut} from 'firebase/auth';
 import {Timestamp, setDoc, doc} from 'firebase/firestore';
 import { auth, db } from '../../fbConfig';
 
@@ -50,6 +50,21 @@ export const sendForgotPasswordEmail = async (email) => {
     try {
         await sendPasswordResetEmail(auth, email);
         return true;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * @description Async method for logging user in
+ * @param {Object} formData - form data
+ * @returns {Object} result if logged in, undefined otherwise
+ */
+export const loginUser = async (formData) => {
+    const {email, password} = formData;
+    try {
+        const result =  await signInWithEmailAndPassword(auth, email, password);
+        return result.user;
     } catch (error) {
         console.log(error);
     }

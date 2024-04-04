@@ -8,6 +8,8 @@ import CustomFooter from './layouts/Footer';
 import Home from './pages/Home';
 import { AlertProvider } from './context/alertContext/AlertContext';
 import ForgotPassword from './pages/ForgotPassword';
+import Login from './pages/Login';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -17,9 +19,11 @@ function App() {
           <CustomNavbar/>
           <Routes>
             <Route exact path='/auth/register' element={<Register />} />
+            <Route exact path='/auth/login' element={<Login />} />
             <Route exact path='/auth/forgot-password' element={<ForgotPassword />} />
             <Route exact path='/' element={<Home />} />
             <Route exact path='/home' element={<Home />} />
+            <Route path='/*' element={<NotFound />} />
           </Routes>
           <CustomFooter/>
         </Router>

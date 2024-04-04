@@ -25,7 +25,7 @@ function CustomNavbar() {
         type: ActionTypes.LOGOUT_SUCCESS
       });
       showAlert('You have successully logged out.');
-      navigate('/auth/register');
+      navigate('/auth/login');
     } else {
       dispatch({
         type: ActionTypes.LOGOUT_ERROR
@@ -66,12 +66,16 @@ function CustomNavbar() {
                     {
                       !isAuthenticated ?
                       <>
-                        <NavDropdown.Item as={Link} onClick={() => setShowOffNavbar(false)}>
+                        <NavDropdown.Item as={Link} to={'/auth/login'} onClick={() => setShowOffNavbar(false)}>
                           <Button variant='outline-none'>Login</Button>
                         </NavDropdown.Item>
                         <NavDropdown.Divider />
                         <NavDropdown.Item as={Link} to={'/auth/register'} onClick={() => setShowOffNavbar(false)}>
                           <Button variant='outline-none'>Register</Button>
+                        </NavDropdown.Item>
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item as={Link} to={'/auth/forgot-password'} onClick={() => setShowOffNavbar(false)}>
+                          <Button variant='outline-none'>Forgot Password</Button>
                         </NavDropdown.Item>
                       </>
                       :
