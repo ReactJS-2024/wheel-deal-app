@@ -1,4 +1,4 @@
-import {createUserWithEmailAndPassword} from 'firebase/auth';
+import {createUserWithEmailAndPassword, sendPasswordResetEmail, signOut} from 'firebase/auth';
 import {Timestamp, setDoc, doc} from 'firebase/firestore';
 import { auth, db } from '../../fbConfig';
 
@@ -24,5 +24,33 @@ export const registerUser = async (formData) => {
     } catch (error) {
         console.log(error);
         return null;
+    }
+}
+
+/**
+ * @description Async method for signing user out (logging out)
+ * @returns {boolean} true if logged out, undefined otherwise
+ */
+export const logoutUser = async () => {
+    // const currentUser = auth.currentUser; // ! objekat koji cuva trenutno ulogovanog korisnika auth instance
+    try {
+        await signOut(auth);
+        return true;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * @description Async method for sending reset password link to user's email
+ * @param {string} email - email to send password
+ * @returns {boolean} true if email sent, undefined othewise
+ */
+export const sendForgotPasswordEmail = async (email) => {
+    try {
+        await sendPasswordResetEmail(auth, email);
+        return true;
+    } catch (error) {
+        console.log(error);
     }
 }

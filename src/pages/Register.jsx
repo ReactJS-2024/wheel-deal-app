@@ -5,9 +5,11 @@ import {useState, useContext} from 'react';
 import { registerUser } from '../context/authContext/authActions';
 import AuthContext from '../context/authContext/AuthContext';
 import ActionTypes from '../context/authContext/authActionTypes';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
 
+    const navigate = useNavigate();
     const {dispatch} = useContext(AuthContext);
     const [values, setValues] = useState({
         firstName: '',
@@ -72,8 +74,28 @@ function Register() {
 
         const user = await registerUser(formData);
 
-        // TODO nastaviti ovde
-        console.log(user);
+        if (user) {
+            dispatch({
+                type: ActionTypes.REGISTER_SUCCESS,
+                payload: user
+            });
+            setValues({
+                firstName: '',
+                lastName: '',
+                userName: '',
+                email: '',
+                password: '',
+                confirmPassword: '',
+                error: '',
+                isConfirmed: false
+            });
+            navigate('/');
+        } else {
+            dispatch({
+                type: ActionTypes.REGISTER_ERROR
+            });
+        }
+        setValues({...values, loading: false});
     }
 
     return (
@@ -103,7 +125,7 @@ function Register() {
                             onChange={handleChange}/>
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formFirstName">
+                    <Form.Group className="mb-3" controlId="formUserName">
                         <Form.Label>User Name</Form.Label>
                         <Form.Control 
                             value={userName} 
