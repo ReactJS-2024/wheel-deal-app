@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import NoDataMsg from "../shared/NoDataMsg";
 
 
 function BasicData({user}) {
 
-    const [formDisabled, setFormDisabled] = useState(false);
+    const [editMode, setEditMode] = useState(false);
     const [values, setValues] = useState({
         email: '',
         firstName: '',
@@ -24,11 +25,11 @@ function BasicData({user}) {
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
+        console.log(e);
     }
 
-    console.log(user)
     if (!user || Object.keys(user).length === 0) {
-        return <h1 className="text-center mt-5 text-info">Basic Data is loading...</h1>
+        return <NoDataMsg messageText='No Data found...' />
     }
 
     return (
@@ -42,7 +43,7 @@ function BasicData({user}) {
                         type="switch"
                         id="custom-switch"
                         label='Turn on to edit your profile data'
-                        onChange={() => setFormDisabled(prevState => !prevState)}>
+                        onChange={() => setEditMode(prevState => !prevState)}>
                     </Form.Check>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formFirstName">
@@ -52,10 +53,10 @@ function BasicData({user}) {
                     <Form.Control
                         name="firstName"
                         onChange={handleChange}
-                        disabled={formDisabled}
+                        disabled={!editMode}
                         type="text"
                         placeholder={user.firstName}
-                        value={formDisabled ? user.firstName : firstName}>
+                        value={editMode ? firstName : user.firstName}>
                     </Form.Control>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formFirstName">
@@ -65,10 +66,10 @@ function BasicData({user}) {
                     <Form.Control
                         name="lastName"
                         onChange={handleChange}
-                        disabled={formDisabled}
+                        disabled={!editMode}
                         type="text"
                         placeholder={user.lastName}
-                        value={formDisabled ? user.lastName : lastName}>
+                        value={editMode ? lastName : user.lastName}>
                     </Form.Control>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formFirstName">
@@ -78,10 +79,10 @@ function BasicData({user}) {
                     <Form.Control
                         name="userName"
                         onChange={handleChange}
-                        disabled={formDisabled}
+                        disabled={!editMode}
                         type="text"
                         placeholder={user.userName}
-                        value={formDisabled ? user.userName : userName}>
+                        value={editMode ? userName : user.userName}>
                     </Form.Control>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formFirstName">
@@ -91,14 +92,14 @@ function BasicData({user}) {
                     <Form.Control
                         name="email"
                         onChange={handleChange}
-                        disabled={formDisabled}
+                        disabled={!editMode}
                         type="text"
                         placeholder={user.email}
-                        value={formDisabled ? user.email : email}>
+                        value={editMode ? email : user.email}>
                     </Form.Control>
                 </Form.Group>
 
-                <Button disabled={formDisabled} className="mb-3 btn btn-primary">
+                <Button disabled={!editMode} className="mb-3 btn btn-primary" type="submit">
                     Modify data
                 </Button>
             </Form>

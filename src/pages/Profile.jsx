@@ -5,6 +5,7 @@ import { fetchUser } from "../context/profileContext/profileActions";
 import ActionTypes from "../context/profileContext/profileActionTypes";
 import { Col, Container, Row } from "react-bootstrap";
 import BasicData from "../components/profile/BasicData";
+import NoDataMsg from "../components/shared/NoDataMsg";
 
 
 function Profile() {
@@ -32,7 +33,7 @@ function Profile() {
     }, [id]);
 
     if (loading) {
-        return <h1 className="text-center text-info mt-5">Data is loading...</h1>
+        return <NoDataMsg messageText='Data is Loading...' />
     }
 
     return (
