@@ -28,8 +28,7 @@ function SingleImageUploader({data, collection, objectName}) {
             return;
         }
         let imgUrl;
-        let msg;
-        const imgRef = ref(storage, `${collection}/${Date.now()} - ${file.name}`); // users/datum_trenutni - moja profila slika.png
+        const imgRef = ref(storage, `${collection}/${Date.now()} - ${file.name}`); // profile/datum_trenutni - moja profila slika.png
         
         switch (objectName) {
             case 'users':
@@ -47,13 +46,11 @@ function SingleImageUploader({data, collection, objectName}) {
                 photoUrl: imgRef ? imgUrl : ''
             }
         });
-        msg = imgRef ? 'Your file has been successfully uploaded!' : 'Something went wrong, please try again';
-
-        if (imgRef) {
-            showAlert(msg);
-        } else {
-            showAlert(msg, 'danger');
-        }
+        
+        let alertMsg = imgRef ? 'Your file has been successfully uploaded!' : 'Something went wrong, please try again';
+        let alertType = imgRef ? 'success' : 'danger';
+       
+        showAlert(alertMsg, alertType);
 
     }
 

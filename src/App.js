@@ -13,6 +13,7 @@ import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import ProtectedRoute from './components/shared/ProtectedRoute';
+import PublicRoute from './components/shared/PublicRoute';
 
 
 function App() {
@@ -23,9 +24,11 @@ function App() {
           <Router>
             <CustomNavbar/>
             <Routes>
-              <Route exact path='/auth/register' element={<Register />} />
-              <Route exact path='/auth/login' element={<Login />} />
-              <Route exact path='/auth/forgot-password' element={<ForgotPassword />} />
+              <Route element={<PublicRoute/>}>
+                <Route exact path='/auth/register' element={<Register />} />
+                <Route exact path='/auth/login' element={<Login />} />
+                <Route exact path='/auth/forgot-password' element={<ForgotPassword />} />
+              </Route>
               <Route exact path='/' element={<Home />} />
               <Route exact path='/home' element={<Home />} />
               <Route element={<ProtectedRoute/>}>
