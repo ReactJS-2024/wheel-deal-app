@@ -1,0 +1,20 @@
+.custom-card {
+    border: none;
+}
+
+.custom-image {
+    width: 250px;
+    height: 250px;
+    border: 1px solid black;
+    box-shadow: 2px 2px 5px black;
+}
+
+.custom-dp-item:hover {
+    cursor: pointer !important;
+}
+
+.carousel-image {
+    height: 500px;
+    object-fit: cover; 
+    object-position: center;
+}

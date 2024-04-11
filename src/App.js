@@ -12,6 +12,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
+import ProtectedRoute from './components/shared/ProtectedRoute';
 
 
 function App() {
@@ -27,7 +28,9 @@ function App() {
               <Route exact path='/auth/forgot-password' element={<ForgotPassword />} />
               <Route exact path='/' element={<Home />} />
               <Route exact path='/home' element={<Home />} />
-              <Route exact path='/profile/:id' element={<Profile />} />
+              <Route element={<ProtectedRoute/>}>
+                <Route exact path='/profile/:id' element={<Profile />} />
+              </Route>      
               <Route path='/*' element={<NotFound />} />
             </Routes>
             <CustomFooter/>

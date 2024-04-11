@@ -6,6 +6,7 @@ import ActionTypes from "../context/profileContext/profileActionTypes";
 import { Col, Container, Row } from "react-bootstrap";
 import BasicData from "../components/profile/BasicData";
 import NoDataMsg from "../components/shared/NoDataMsg";
+import SingleImageUploader from "../components/shared/SingleImageUploader";
 
 
 function Profile() {
@@ -46,7 +47,11 @@ function Profile() {
                                 <BasicData user={user} />
                             </Col>
                             <Col xs={12} md={4}>
-                                <p>Image Uploader placeholder</p>
+                                <SingleImageUploader 
+                                    data={user} 
+                                    collection='profile' 
+                                    objectName='users' 
+                                />
                             </Col>
                         </Row>
                     </Container>

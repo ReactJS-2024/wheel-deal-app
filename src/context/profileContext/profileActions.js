@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore"
+import { doc, getDoc, updateDoc } from "firebase/firestore"
 import { db } from "../../fbConfig"
 
 /**
@@ -15,6 +15,30 @@ export const fetchUser = async (userId) => {
         }
         const userData = docSnapshot.data();
         return userData;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * @description Async handler for updating profile data
+ * @param {object} user - current user
+ * @param {object} data - data to modify 
+ * @return {object} user updated
+ */
+export const updateUserData = async (user, data) => {
+    
+    const {firstName, lastName, userName, email} = data;
+
+    try {
+        await updateDoc(doc(db, 'users', user.uid), {
+            firstName,
+            lastName,
+            userName,
+            email
+        });
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        return userDoc.exists() ? userDoc.data() : null;
     } catch (error) {
         console.log(error);
     }

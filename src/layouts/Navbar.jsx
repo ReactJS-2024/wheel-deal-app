@@ -60,14 +60,14 @@ function CustomNavbar() {
             >
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${false}`}>
-                  Offcanvas
+                  Wheel Deal Inc.
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Nav.Link as={Link} to='/' onClick={() => setShowOffNavbar(false)}>Home</Nav.Link>
                   {loggedIn && <Nav.Link href="#action2" onClick={() => setShowOffNavbar(false)}>Ads</Nav.Link>}
-                  {loggedIn && <Nav.Link as={Link} to={`profile/${auth.currentUser.uid}`} onClick={() => setShowOffNavbar(false)}>Profile</Nav.Link>}
+                  {loggedIn && <Nav.Link as={Link} to={`profile/${auth.currentUser?.uid}`} onClick={() => setShowOffNavbar(false)}>Profile</Nav.Link>}
                   <NavDropdown
                     title="User actions"
                     id={`offcanvasNavbarDropdown-expand-${false}`}>

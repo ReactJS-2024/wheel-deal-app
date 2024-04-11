@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import NoDataMsg from "../shared/NoDataMsg";
+import { convertFBTimestampToDate } from "../../utils/dateUtils";
+import { updateUserData } from "../../context/profileContext/profileActions";
+import AlertContext from "../../context/alertContext/AlertContext";
+import ProfileContext from "../../context/profileContext/ProfileContext";
+import ActionTypes from "../../context/profileContext/profileActionTypes";
 
 
 function BasicData({user}) {
 
+    const {dispatch} = useContext(ProfileContext);
     const [editMode, setEditMode] = useState(false);
+    const {showAlert} = useContext(AlertContext);
     const [values, setValues] = useState({
         email: '',
         firstName: '',
@@ -23,9 +30,39 @@ function BasicData({user}) {
         });
     }
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
-        console.log(e);
+        let updatedUser;
+        const updatedFirstName = firstName || user.firstName;
+        const updatedLastName = lastName || user.lastName;
+        const updatedUserName = userName || user.userName;
+        const updatedEmail = email || user.email;
+        let isUpdateConfirmed = window.confirm('Please confirm saving data');
+        if (!isUpdateConfirmed) {
+            return;
+        }
+
+        updatedUser = await updateUserData(user, {
+            firstName: updatedFirstName,
+            lastName: updatedLastName, 
+            userName: updatedUserName,
+            email: updatedEmail
+        });
+
+        let alertMsg = !updatedUser 
+            ? 'Something went wrong while updating your profile data, please try again.' 
+            : 'Your profile data has been updated successfully';
+        let alertType = !updatedUser
+            ? 'danger'
+            : 'success';
+            
+        showAlert(alertMsg, alertType);
+        dispatch({
+            type: ActionTypes.SET_USER_DATA,
+            payload: !updatedUser ? user : updatedUser
+        });
+
+        setEditMode(false);
     }
 
     if (!user || Object.keys(user).length === 0) {
@@ -34,7 +71,9 @@ function BasicData({user}) {
 
     return (
         <>
-            <h2>Hello {user.firstName} {user.lastName} ({user.userName}), you joined us on <span>date_placeholder</span></h2>
+            <h2>Hello {user.firstName} {user.lastName} (<span style={{fontStyle: 'italic'}}>{user.userName}</span>), you joined us on 
+                <span className="text-info"> {convertFBTimestampToDate(user.createdAt)}</span>
+            </h2>
             <hr />
             <Form onSubmit={handleFormSubmit}>
                 <p className="text-center text-danger">{error}</p>
@@ -42,6 +81,7 @@ function BasicData({user}) {
                     <Form.Check
                         type="switch"
                         id="custom-switch"
+                        checked={editMode}
                         label='Turn on to edit your profile data'
                         onChange={() => setEditMode(prevState => !prevState)}>
                     </Form.Check>
