@@ -6,12 +6,13 @@ import { updateUserData } from "../../context/profileContext/profileActions";
 import AlertContext from "../../context/alertContext/AlertContext";
 import ProfileContext from "../../context/profileContext/ProfileContext";
 import ActionTypes from "../../context/profileContext/profileActionTypes";
-
+import ConfirmPassword from "../auth/ConfirmPassword";
 
 function BasicData({user}) {
 
     const {dispatch} = useContext(ProfileContext);
     const [editMode, setEditMode] = useState(false);
+    const [showConfirmPasswordModal, setShowConfirmPasswordModal] = useState(false);
     const {showAlert} = useContext(AlertContext);
     const [values, setValues] = useState({
         email: '',
@@ -30,39 +31,46 @@ function BasicData({user}) {
         });
     }
 
-    const handleFormSubmit = async (e) => {
-        e.preventDefault();
+    const handleConfirmPassword = async (password) => {
         let updatedUser;
         const updatedFirstName = firstName || user.firstName;
         const updatedLastName = lastName || user.lastName;
         const updatedUserName = userName || user.userName;
         const updatedEmail = email || user.email;
-        let isUpdateConfirmed = window.confirm('Please confirm saving data');
-        if (!isUpdateConfirmed) {
-            return;
+
+        if (password) {
+            updatedUser = await updateUserData(
+                user, 
+                {
+                    firstName: updatedFirstName,
+                    lastName: updatedLastName, 
+                    userName: updatedUserName,
+                    email: updatedEmail
+                }, 
+                password
+            );
+            let alertMsg = !updatedUser 
+                ? 'Something went wrong while updating your profile data, please try again.' 
+                : 'Your profile data has been updated successfully';
+            let alertType = !updatedUser
+                ? 'danger'
+                : 'success';
+                
+            showAlert(alertMsg, alertType);
+
+            dispatch({
+                type: ActionTypes.SET_USER_DATA,
+                payload: !updatedUser ? user : updatedUser
+            });
+
+            setEditMode(false);
         }
 
-        updatedUser = await updateUserData(user, {
-            firstName: updatedFirstName,
-            lastName: updatedLastName, 
-            userName: updatedUserName,
-            email: updatedEmail
-        });
+    }
 
-        let alertMsg = !updatedUser 
-            ? 'Something went wrong while updating your profile data, please try again.' 
-            : 'Your profile data has been updated successfully';
-        let alertType = !updatedUser
-            ? 'danger'
-            : 'success';
-            
-        showAlert(alertMsg, alertType);
-        dispatch({
-            type: ActionTypes.SET_USER_DATA,
-            payload: !updatedUser ? user : updatedUser
-        });
-
-        setEditMode(false);
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        setShowConfirmPasswordModal(true);
     }
 
     if (!user || Object.keys(user).length === 0) {
@@ -71,6 +79,12 @@ function BasicData({user}) {
 
     return (
         <>
+            <ConfirmPassword 
+                show={showConfirmPasswordModal}
+                userEmail={user.email}
+                onHide={() => setShowConfirmPasswordModal(false)}
+                onSubmit={handleConfirmPassword}
+            />
             <h2>Hello {user.firstName} {user.lastName} (<span style={{fontStyle: 'italic'}}>{user.userName}</span>), you joined us on 
                 <span className="text-info"> {convertFBTimestampToDate(user.createdAt)}</span>
             </h2>

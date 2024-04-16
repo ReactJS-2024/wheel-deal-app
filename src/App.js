@@ -14,6 +14,7 @@ import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import ProtectedRoute from './components/shared/ProtectedRoute';
 import PublicRoute from './components/shared/PublicRoute';
+import Ads from './components/ads/Ads';
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
               <Route exact path='/home' element={<Home />} />
               <Route element={<ProtectedRoute/>}>
                 <Route exact path='/profile/:id' element={<Profile />} />
+                <Route exact path='/ads' element={<Ads />} />
               </Route>      
               <Route path='/*' element={<NotFound />} />
             </Routes>

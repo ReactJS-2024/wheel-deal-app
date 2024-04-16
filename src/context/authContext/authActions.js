@@ -1,4 +1,4 @@
-import {createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut} from 'firebase/auth';
+import {EmailAuthProvider, createUserWithEmailAndPassword, reauthenticateWithCredential, sendPasswordResetEmail, signInWithEmailAndPassword, signOut} from 'firebase/auth';
 import {Timestamp, setDoc, doc} from 'firebase/firestore';
 import { auth, db } from '../../fbConfig';
 
@@ -65,6 +65,20 @@ export const loginUser = async (formData) => {
     try {
         const result =  await signInWithEmailAndPassword(auth, email, password);
         return result.user;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * @description Async method for re-auth of current user
+ * @param {object} currentUser - current user
+ * @param {string} password - password of current user
+ */
+export const reauthenticateUser = async (currentUser, password) => {
+    const credentials = EmailAuthProvider.credential(currentUser.email, password);
+    try {
+        return reauthenticateWithCredential(currentUser, credentials);
     } catch (error) {
         console.log(error);
     }

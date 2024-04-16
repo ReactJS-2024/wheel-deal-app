@@ -66,7 +66,7 @@ function CustomNavbar() {
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Nav.Link as={Link} to='/' onClick={() => setShowOffNavbar(false)}>Home</Nav.Link>
-                  {loggedIn && <Nav.Link href="#action2" onClick={() => setShowOffNavbar(false)}>Ads</Nav.Link>}
+                  {loggedIn && <Nav.Link as={Link} to='/ads' onClick={() => setShowOffNavbar(false)}>Ads</Nav.Link>}
                   {loggedIn && <Nav.Link as={Link} to={`profile/${auth.currentUser?.uid}`} onClick={() => setShowOffNavbar(false)}>Profile</Nav.Link>}
                   <NavDropdown
                     title="User actions"

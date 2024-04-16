@@ -1,5 +1,7 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore"
-import { db } from "../../fbConfig"
+import { auth, db } from "../../fbConfig"
+import { getAuth, updateEmail } from "firebase/auth";
+import { reauthenticateUser } from "../authContext/authActions";
 
 /**
  * @description Async method to fetch user data based on passed userId
@@ -24,13 +26,20 @@ export const fetchUser = async (userId) => {
  * @description Async handler for updating profile data
  * @param {object} user - current user
  * @param {object} data - data to modify 
+ * @param {string} password - current user password
  * @return {object} user updated
  */
-export const updateUserData = async (user, data) => {
+export const updateUserData = async (user, data, password) => {
     
     const {firstName, lastName, userName, email} = data;
 
     try {
+        const currentAuth = getAuth();
+        if (currentAuth && currentAuth.currentUser.email !== email) {
+            await reauthenticateUser(currentAuth.currentUser, password);
+            await updateEmail(currentAuth.currentUser, email);
+        }
+
         await updateDoc(doc(db, 'users', user.uid), {
             firstName,
             lastName,
