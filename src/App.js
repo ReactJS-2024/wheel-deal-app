@@ -15,33 +15,36 @@ import Profile from './pages/Profile';
 import ProtectedRoute from './components/shared/ProtectedRoute';
 import PublicRoute from './components/shared/PublicRoute';
 import Ads from './components/ads/Ads';
+import { AdProvider } from './context/adContext/AdContext';
 
 
 function App() {
   return (
     <AlertProvider>
-      <ProfileProvider>
-        <AuthProvider>
-          <Router>
-            <CustomNavbar/>
-            <Routes>
-              <Route element={<PublicRoute/>}>
-                <Route exact path='/auth/register' element={<Register />} />
-                <Route exact path='/auth/login' element={<Login />} />
-                <Route exact path='/auth/forgot-password' element={<ForgotPassword />} />
-              </Route>
-              <Route exact path='/' element={<Home />} />
-              <Route exact path='/home' element={<Home />} />
-              <Route element={<ProtectedRoute/>}>
-                <Route exact path='/profile/:id' element={<Profile />} />
-                <Route exact path='/ads' element={<Ads />} />
-              </Route>      
-              <Route path='/*' element={<NotFound />} />
-            </Routes>
-            <CustomFooter/>
-          </Router>
-        </AuthProvider>
-      </ProfileProvider>
+      <AdProvider>
+        <ProfileProvider>
+          <AuthProvider>
+            <Router>
+              <CustomNavbar/>
+              <Routes>
+                <Route element={<PublicRoute/>}>
+                  <Route exact path='/auth/register' element={<Register />} />
+                  <Route exact path='/auth/login' element={<Login />} />
+                  <Route exact path='/auth/forgot-password' element={<ForgotPassword />} />
+                </Route>
+                <Route exact path='/' element={<Home />} />
+                <Route exact path='/home' element={<Home />} />
+                <Route element={<ProtectedRoute/>}>
+                  <Route exact path='/profile/:id' element={<Profile />} />
+                  <Route exact path='/ads' element={<Ads />} />
+                </Route>      
+                <Route path='/*' element={<NotFound />} />
+              </Routes>
+              <CustomFooter/>
+            </Router>
+          </AuthProvider>
+        </ProfileProvider>
+      </AdProvider>
     </AlertProvider>
   );
 }

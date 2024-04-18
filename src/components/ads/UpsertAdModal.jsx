@@ -1,7 +1,10 @@
 import { useContext, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { createAd } from "../../context/adContext/adActions";
+import { createAd, getAllAds } from "../../context/adContext/adActions";
 import AlertContext from "../../context/alertContext/AlertContext";
+import MultipleImagesUploader from "../shared/MultipleImagesUploader";
+import { uploadMultipleImages } from "../../context/fileContext/fileActions";
+import { formatPrice } from "../../utils/priceUtils";
 
 function UpsertAdModal({show, handleClose}) {
 
@@ -22,11 +25,10 @@ function UpsertAdModal({show, handleClose}) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // TODO otkomentarisati sledeci cas
-        // if (!images.length) {
-        //     setValues({...values, error: 'At least 1 image of your ad must be provided.'});
-        //     return;
-        // }
+        if (!images.length) {
+            setValues({...values, error: 'At least 1 image of your ad must be provided.'});
+            return;
+        }
 
         if (!title || !description || !price || !location || !contact) {
             setValues({...values, error: 'All fields are mandatory.'});
@@ -42,8 +44,7 @@ function UpsertAdModal({show, handleClose}) {
             
             setValues({...values, loading: true});
 
-            // const imgs = await uploadMultipleImages(images, 'ads');
-            const imgs = []; // TODO skloniti naredni cas
+            const imgs = await uploadMultipleImages(images, 'ads');
 
             const isAdCreated = await createAd({
                 title,
@@ -69,8 +70,17 @@ function UpsertAdModal({show, handleClose}) {
 
     }
 
+    const handleImagesUpload = (images) => {
+        setImages(images);
+    }
+
     const handleOnChange = (e) => {
         setValues({...values, [e.target.name]: e.target.value});
+        if (e.target.name === 'price') {
+            setValues({...values, price: formatPrice(e.target.value)});
+        } else {
+            setValues({...values, [e.target.name]: e.target.value});
+        }
     }
 
     return (
@@ -83,7 +93,7 @@ function UpsertAdModal({show, handleClose}) {
                 <Modal.Title>Please fill vehicle data</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            {/* <MultipleImagesUploader onImagesUpload={handleImagesUpload} isDialogOpened={show}/> */}
+            <MultipleImagesUploader onImagesUpload={handleImagesUpload} isDialogOpened={show}/>
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="title">Title</Form.Label>

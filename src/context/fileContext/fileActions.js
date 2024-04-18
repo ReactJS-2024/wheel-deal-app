@@ -25,6 +25,30 @@ export const uploadSingleImage = async (imgRef, file, objectName, uid) => {
 }
 
 /**
+ * @description Async method for uploading multiple images for given folder name (path)
+ * @param {Array} images - array of images to upload
+ * @param {string} path - folder name
+ * @returns {Array} array of uploaded images
+ */
+export const uploadMultipleImages = async (images, path) => {
+    try {
+        const uploadPromises = images.map(async (file) => {
+            const imgRef = ref(storage, `${path}/${Date.now()} - ${file.name}`);
+            const result = await uploadBytes(imgRef, file);
+            const fileUrl = await getDownloadURL(ref(storage, result.ref.fullPath));
+            return {
+                url: fileUrl,
+                path: result.ref.fullPath
+            };
+        });
+        const imgs = await Promise.all(uploadPromises);
+        return imgs;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
  * @description Async handler for removing single file
  * @param {string} objectName - object name
  * @param {string} uid - uid

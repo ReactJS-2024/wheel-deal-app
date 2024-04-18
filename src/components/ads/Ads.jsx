@@ -1,3 +1,4 @@
+import AllAds from "./AllAds"
 import NewAd from "./NewAd"
 
 
@@ -6,7 +7,7 @@ function Ads() {
     <div>
         <NewAd/>
         <hr className="w-50 mx-auto" />
-        <h1>All Ads placeholder</h1>
+        <AllAds/>
     </div>
   )
 }
