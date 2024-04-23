@@ -16,7 +16,7 @@ import { auth } from '../fbConfig';
 function CustomNavbar() {
 
   const navigate = useNavigate();
-  const {loggedIn, checkingStatus} = useUserAuthStatus();
+  const {isAuthenticated, checkingStatus} = useContext(AuthContext);
   const {dispatch} = useContext(AuthContext);
   const [showOffNavbar, setShowOffNavbar] = useState(false);
   const {showAlert} = useContext(AlertContext);
@@ -36,10 +36,6 @@ function CustomNavbar() {
       showAlert('Oops something went wront while logging you out, please try again.', 'danger');
     }
     setShowOffNavbar(false);
-  }
-
-  if (checkingStatus) {
-    return <h1> Loading User data... </h1>;
   }
 
   return (
@@ -66,13 +62,13 @@ function CustomNavbar() {
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Nav.Link as={Link} to='/' onClick={() => setShowOffNavbar(false)}>Home</Nav.Link>
-                  {loggedIn && <Nav.Link as={Link} to='/ads' onClick={() => setShowOffNavbar(false)}>Ads</Nav.Link>}
-                  {loggedIn && <Nav.Link as={Link} to={`profile/${auth.currentUser?.uid}`} onClick={() => setShowOffNavbar(false)}>Profile</Nav.Link>}
+                  {isAuthenticated && <Nav.Link as={Link} to='/ads' onClick={() => setShowOffNavbar(false)}>Ads</Nav.Link>}
+                  {isAuthenticated && <Nav.Link as={Link} to={`profile/${auth.currentUser?.uid}`} onClick={() => setShowOffNavbar(false)}>Profile</Nav.Link>}
                   <NavDropdown
                     title="User actions"
                     id={`offcanvasNavbarDropdown-expand-${false}`}>
                     {
-                      !loggedIn ?
+                      !isAuthenticated ?
                       <>
                         <NavDropdown.Item as={Link} to={'/auth/login'} onClick={() => setShowOffNavbar(false)}>
                           <Button variant='outline-none'>Login</Button>

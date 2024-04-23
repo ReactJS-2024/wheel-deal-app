@@ -10,16 +10,24 @@ export const AuthProvider = ({children}) => {
 
     const initState = {
         user: {},
-        isAuthenticated: false
+        isAuthenticated: false,
+        checkingStatus: true 
     }
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            dispatch({
-                type: ActionTypes.LOGIN_SUCCESS,
-                payload: user
-            });
+            if (user) {
+                dispatch({
+                    type: ActionTypes.LOGIN_SUCCESS,
+                    payload: user
+                });
+            } else {
+                dispatch({
+                    type: ActionTypes.LOGOUT_SUCCESS
+                });
+            }
         });
+
         return () => unsubscribe();
     }, []);
 
