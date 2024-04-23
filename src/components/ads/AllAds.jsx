@@ -14,29 +14,25 @@ function AllAds({fetchUserAds, userId}) {
 
     useEffect(() => {
         async function fetchData() {
+            let fetchedAds;
             if (fetchUserAds) {
+                fetchedAds = adsForUser && adsForUser.length ? adsForUser : await getAdsForUser(userId);
                 if (!adsForUser.length) {
-                    const adsForUser = await getAdsForUser(userId);
                     dispatch({
                         type: ActionTypes.SET_ADS_FOR_USER,
-                        payload: adsForUser
+                        payload: fetchedAds
                     });
-                    setAdsList(adsForUser);
-                } else {
-                    setAdsList(adsForUser);
                 }
             } else {
+                fetchedAds = allAds && allAds.length ? allAds : await getAllAds();
                 if (!allAds.length) {
-                    const allAds = await getAllAds();
                     dispatch({
                         type: ActionTypes.SET_ALL_ADS,
-                        payload: allAds
+                        payload: fetchedAds
                     });
-                    setAdsList(allAds);
-                } else {
-                    setAdsList(allAds);
                 }
             }
+            setAdsList(fetchedAds);
         }
         fetchData();
     }, [allAds, dispatch]);
