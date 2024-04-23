@@ -1,26 +1,41 @@
 import { useContext, useEffect, useState } from "react"
 import AdContext from "../../context/adContext/AdContext";
-import { getAllAds } from "../../context/adContext/adActions";
+import { getAdsForUser, getAllAds } from "../../context/adContext/adActions";
 import ActionTypes from "../../context/adContext/adActionTypes";
 import NoDataMsg from "../shared/NoDataMsg";
+import AdCard from "./AdCard";
+import { auth } from "../../fbConfig";
 
 
-function AllAds() {
+function AllAds({fetchUserAds, userId}) {
 
     const [adsList, setAdsList] = useState([]);
-    const {allAds, dispatch} = useContext(AdContext);
+    const {allAds, adsForUser, dispatch} = useContext(AdContext);
 
     useEffect(() => {
         async function fetchData() {
-            if (!allAds.length) {
-                const allAds = await getAllAds();
-                dispatch({
-                    type: ActionTypes.SET_ALL_ADS,
-                    payload: allAds
-                });
-                setAdsList(allAds);
+            if (fetchUserAds) {
+                if (!adsForUser.length) {
+                    const adsForUser = await getAdsForUser(userId);
+                    dispatch({
+                        type: ActionTypes.SET_ADS_FOR_USER,
+                        payload: adsForUser
+                    });
+                    setAdsList(adsForUser);
+                } else {
+                    setAdsList(adsForUser);
+                }
             } else {
-                setAdsList(allAds);
+                if (!allAds.length) {
+                    const allAds = await getAllAds();
+                    dispatch({
+                        type: ActionTypes.SET_ALL_ADS,
+                        payload: allAds
+                    });
+                    setAdsList(allAds);
+                } else {
+                    setAdsList(allAds);
+                }
             }
         }
         fetchData();
@@ -30,12 +45,16 @@ function AllAds() {
         return <NoDataMsg messageText='Data is loading...' />
     }
 
-    // TODO OVDE smo stali na 16. casu
     return (
         <div>
-            {adsList.map(ad => (
-                <div key={ad.id}>{ad.title}</div>
-            ))}
+            <div className="custom-cards-wrapper">
+                {adsList.map(ad => (
+                    <AdCard 
+                        cardData={ad}
+                        isEditEnabled={fetchUserAds && userId === auth.currentUser.uid}
+                    />
+                ))}
+            </div>
         </div>
     )
 }

@@ -7,6 +7,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import BasicData from "../components/profile/BasicData";
 import NoDataMsg from "../components/shared/NoDataMsg";
 import SingleImageUploader from "../components/shared/SingleImageUploader";
+import AllAds from "../components/ads/AllAds";
 
 
 function Profile() {
@@ -54,6 +55,8 @@ function Profile() {
                                 />
                             </Col>
                         </Row>
+                        <h1 className="text-center my-5">Your ads</h1>
+                        <AllAds fetchUserAds={true} userId={id} />
                     </Container>
                 : 
                     <h1 className="text-center mt-5 text-danger">{error}</h1>

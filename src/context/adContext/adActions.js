@@ -48,3 +48,23 @@ export const getAllAds = async () => {
         console.log(error);
     }
 }
+
+/**
+ * @description Get all ads for user
+ * @param {string} userId - user id to fetch ads for
+ * @returns {array} all ads for user 
+ */
+export const getAdsForUser = async (userId) => {
+    const q = query(
+        collection(db, 'ads'),
+        where('createdBy', '==', userId)
+    );
+    try {
+        const querySnapshot = await getDocs(q);
+        const adsForUser = querySnapshot.docs
+            .map(doc => ({id: doc.id, ...doc.data()}));
+        return adsForUser;
+    } catch (error) {
+        console.log(error);
+    }
+}

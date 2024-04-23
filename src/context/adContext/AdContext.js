@@ -6,7 +6,8 @@ const AdContext = createContext();
 export const AdProvider = ({children}) => {
   
    const initState = {
-       allAds: []
+       allAds: [],
+       adsForUser: []
    }
 
    const [state, dispatch] = useReducer(adReducer, initState);

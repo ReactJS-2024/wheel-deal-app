@@ -11,6 +11,15 @@ const adReducer = (state, action) => {
            return {
                ...state
            }
+        case ActionTypes.SET_ADS_FOR_USER:
+            return {
+                ...state,
+                adsForUser: action.payload,
+            }
+        case ActionTypes.GET_ADS_FOR_USER:
+            return {
+                ...state
+            }
        default:
            return state;
    }

@@ -12,12 +12,14 @@ import { Button } from 'react-bootstrap';
 import AlertContext from '../context/alertContext/AlertContext';
 import { useUserAuthStatus } from '../hooks/useUserAuthStatus';
 import { auth } from '../fbConfig';
+import AdContext from '../context/adContext/AdContext';
 
 function CustomNavbar() {
 
   const navigate = useNavigate();
   const {isAuthenticated, checkingStatus} = useContext(AuthContext);
   const {dispatch} = useContext(AuthContext);
+  const {dispatch : adDispatch} = useContext(AdContext);
   const [showOffNavbar, setShowOffNavbar] = useState(false);
   const {showAlert} = useContext(AlertContext);
 
@@ -26,6 +28,10 @@ function CustomNavbar() {
     if (logoutResponse) {
       dispatch({
         type: ActionTypes.LOGOUT_SUCCESS
+      });
+      adDispatch({
+        type: 'SET_ADS_FOR_USER',
+        payload: []
       });
       showAlert('You have successully logged out.');
       navigate('/auth/login');
