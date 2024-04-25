@@ -16,7 +16,8 @@ function AllAds({fetchUserAds, userId}) {
         async function fetchData() {
             let fetchedAds;
             if (fetchUserAds) {
-                fetchedAds = adsForUser && adsForUser.length ? adsForUser : await getAdsForUser(userId);
+                const isLoggedUserAds = adsForUser?.some(ad => ad.createdBy === userId);
+                fetchedAds = isLoggedUserAds ? adsForUser : await getAdsForUser(userId);
                 if (!adsForUser.length) {
                     dispatch({
                         type: ActionTypes.SET_ADS_FOR_USER,
@@ -24,7 +25,7 @@ function AllAds({fetchUserAds, userId}) {
                     });
                 }
             } else {
-                fetchedAds = allAds && allAds.length ? allAds : await getAllAds();
+                fetchedAds = allAds?.length ? allAds : await getAllAds();
                 if (!allAds.length) {
                     dispatch({
                         type: ActionTypes.SET_ALL_ADS,
@@ -35,7 +36,7 @@ function AllAds({fetchUserAds, userId}) {
             setAdsList(fetchedAds);
         }
         fetchData();
-    }, [allAds, dispatch]);
+    }, [allAds, adsForUser, userId, dispatch]);
 
     if (!adsList) {
         return <NoDataMsg messageText='Data is loading...' />
