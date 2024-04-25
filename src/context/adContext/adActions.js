@@ -1,4 +1,4 @@
-import { Timestamp, addDoc, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { Timestamp, addDoc, collection, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "../../fbConfig";
 
 /**
@@ -29,6 +29,7 @@ export const createAd = async (adData) => {
 
 }
 
+// ! 🔽 Stari nacin - dobavljanje svih ad-ova bez slusanja live izmena
 /**
  * @description Get all ads
  * @returns {Array} - all ads unsold ads
@@ -49,6 +50,29 @@ export const getAllAds = async () => {
     }
 }
 
+// * 🌟 Novi nacin - sa slusanjem live izmena
+/**
+ * @description Live listening to ALL ads change in DB
+ * @param {function} onAdsReceived - callback function to return recevied live ads
+ * @returns {function} unsubscribe function
+ */
+export const subscribeToAllAds = (onAdsReceived) => {
+    const q = query(
+        collection(db, 'ads'),
+        where('isSold', '==', false)
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const unsoldAds = querySnapshot.docs
+            .map(doc => ({id: doc.id, ...doc.data()}));
+        onAdsReceived(unsoldAds);
+    }, (error) => {
+        console.log(error);
+    });
+    return unsubscribe;
+}
+
+// ! 🔽 Stari nacin - dobavljanje korisnikovih ad-ova bez slusanja live izmena
 /**
  * @description Get all ads for user
  * @param {string} userId - user id to fetch ads for
@@ -67,6 +91,30 @@ export const getAdsForUser = async (userId) => {
     } catch (error) {
         console.log(error);
     }
+}
+
+// * 🌟 Novi nacin - sa slusanjem live izmena
+/**
+ * @description Live listening to USER'S ads change in DB
+ * @param {string} userId - id of user to fetch ads for
+ * @param {function} onAdsReceived - callback function to return recevied live ads
+ * @returns {function} unsubscribe function
+ */
+export const subscribeToAdsForUser = (userId, onAdsReceived) => {
+    const q = query(
+        collection(db, 'ads'),
+        where('createdBy', '==', userId)
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const adsForUser = querySnapshot.docs
+            .map(doc => ({id: doc.id, ...doc.data()}));
+        onAdsReceived(adsForUser);
+    }, (error) => {
+        console.log(error);
+    });
+
+    return unsubscribe;
 }
 
 /**
