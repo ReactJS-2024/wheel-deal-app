@@ -4,7 +4,7 @@ import { useContext, useState } from "react"
 import './ads.css';
 import AdDetails from "./AdDetails";
 import UpsertAdModal from "./UpsertAdModal";
-import { updateAsSold } from "../../context/adContext/adActions";
+import { deleteAdById, updateAsSold } from "../../context/adContext/adActions";
 import AlertContext from "../../context/alertContext/AlertContext";
 
 
@@ -22,8 +22,15 @@ function AdCard({cardData, isEditEnabled}) {
         handleOpenModal();
     }
 
-    const onDeleteAd = () => {
-
+    const onDeleteAd = (adId) => {
+        if (window.confirm('Please confirm deletion of your Ad')) {
+            let isDeleted = deleteAdById(adId);
+            if (isDeleted) {
+                showAlert('Your Ad has been deleted!');
+            } else {
+                showAlert('Oops! An error occured while deleting your Ad!', 'danger');
+            }
+        }
     }
 
     const onMarkedAsSold = (adId) => {
@@ -58,7 +65,7 @@ function AdCard({cardData, isEditEnabled}) {
                                         <Dropdown.Item onClick={() => onUpdateAd()}>
                                             Edit Ad
                                         </Dropdown.Item>
-                                        <Dropdown.Item onClick={() => onDeleteAd()}>
+                                        <Dropdown.Item onClick={() => onDeleteAd(cardData.id)}>
                                             Delete Ad
                                         </Dropdown.Item>
                                         <Dropdown.Item onClick={() => onMarkedAsSold(cardData.id)}>

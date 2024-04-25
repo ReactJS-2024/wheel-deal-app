@@ -1,4 +1,4 @@
-import { Timestamp, addDoc, collection, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import { Timestamp, addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "../../fbConfig";
 
 /**
@@ -159,6 +159,19 @@ export const updateAsSold = async (adId) => {
         await updateDoc(adRef, {
             isSold: true
         });
+        return true;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * @description Async handler for deleting an ad
+ * @param {string} adId - Ad id for delete
+ */
+export const deleteAdById = async (adId) => {
+    try {
+        await deleteDoc(doc(db, 'ads', adId));
         return true;
     } catch (error) {
         console.log(error);
