@@ -5,7 +5,7 @@ import { useState } from "react"
 
 function NewAd() {
 
-    let [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     const handleOpen = () => {
         setShowModal(true);

@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { Carousel, Button } from "react-bootstrap"
 import { IoIosImages } from "react-icons/io";
 
-function MultipleImagesUploader({onImagesUpload, isDialogOpened}) {
+function MultipleImagesUploader({onImagesUpload, isDialogOpened, inputImages}) {
 
-    let [images, setImages] = useState([]);
+    console.log(inputImages)
+    let [images, setImages] = useState(inputImages?.length ? inputImages : []);
     const inputFileRef = useRef(null);
 
     const triggerFileInput = () => {

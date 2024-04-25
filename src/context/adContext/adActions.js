@@ -1,4 +1,4 @@
-import { Timestamp, addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { Timestamp, addDoc, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "../../fbConfig";
 
 /**
@@ -64,6 +64,54 @@ export const getAdsForUser = async (userId) => {
         const adsForUser = querySnapshot.docs
             .map(doc => ({id: doc.id, ...doc.data()}));
         return adsForUser;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * @description Update ad handler
+ * @param {string} adId - id of ad to update
+ * @param {object} adData - data to be updated
+ * @returns {boolean} true if updated, undefined otherwise
+ */
+export const updateAd = async (adId, adData) => {
+    const {title, vType, description, price, contact, location, imgs} = adData;
+    const adRef = doc(db, 'ads', adId);
+
+    const updateData = {
+        title,
+        type: vType.toLowerCase(),
+        price,
+        description,
+        location,
+        contact
+    }
+
+    if (imgs?.length) {
+        updateData.images = imgs;
+    }
+
+    try {
+        await updateDoc(adRef, updateData);
+        return true;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * @description Async handler for marking ad as sold
+ * @param {string} adId - ad id 
+ * @returns {boolean} true if updated as sold, udnefined otherwise
+ */
+export const updateAsSold = async (adId) => {
+    const adRef = doc(db, 'ads', adId);
+    try {
+        await updateDoc(adRef, {
+            isSold: true
+        });
+        return true;
     } catch (error) {
         console.log(error);
     }

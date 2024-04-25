@@ -1,26 +1,38 @@
 import { Card, Button, Dropdown } from "react-bootstrap"
 import { convertFBTimestampToDate } from "../../utils/dateUtils"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import './ads.css';
 import AdDetails from "./AdDetails";
+import UpsertAdModal from "./UpsertAdModal";
+import { updateAsSold } from "../../context/adContext/adActions";
+import AlertContext from "../../context/alertContext/AlertContext";
 
 
 function AdCard({cardData, isEditEnabled}) {
 
+    const {showAlert} = useContext(AlertContext);
     const [isShowDetails, setIsShowDetails] = useState(false);
     const handleShow = () => setIsShowDetails(true);
+    const [showModal, setShowModal] = useState(false);
     const handleClose = () => setIsShowDetails(false);
+    const handleOpenModal = () => setShowModal(true);
+    const handleCloseModal = () => setShowModal(false);
 
     const onUpdateAd = () => {
-
+        handleOpenModal();
     }
 
     const onDeleteAd = () => {
 
     }
 
-    const onMarkedAsSold = () => {
-        
+    const onMarkedAsSold = (adId) => {
+        if (window.confirm('Please confirm marking ad as sold')) {
+            const isSold = updateAsSold(adId);
+            const alertMsg = isSold ? 'Congratulations! You have sold your vehicle!' : 'Oops, something went wrong. Please try again.';
+            const alertType = isSold ? 'success' : 'danger';
+            showAlert(alertMsg, alertType);
+        }
     }
     
     return (
@@ -49,7 +61,7 @@ function AdCard({cardData, isEditEnabled}) {
                                         <Dropdown.Item onClick={() => onDeleteAd()}>
                                             Delete Ad
                                         </Dropdown.Item>
-                                        <Dropdown.Item onClick={() => onMarkedAsSold()}>
+                                        <Dropdown.Item onClick={() => onMarkedAsSold(cardData.id)}>
                                             Mark as Sold
                                         </Dropdown.Item>
                                     </Dropdown.Menu>
@@ -58,6 +70,12 @@ function AdCard({cardData, isEditEnabled}) {
                     </div>
                 </Card.Body>
             </Card>
+            <UpsertAdModal 
+                show={showModal}
+                handleClose={handleCloseModal}
+                isUpdateModal={true}
+                adData={cardData}
+            />
             <AdDetails adData={cardData} show={isShowDetails} handleClose={handleClose}/>
         </>
     )

@@ -1,31 +1,32 @@
 import { useContext, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { createAd, getAllAds } from "../../context/adContext/adActions";
+import { createAd, getAllAds, updateAd } from "../../context/adContext/adActions";
 import AlertContext from "../../context/alertContext/AlertContext";
 import MultipleImagesUploader from "../shared/MultipleImagesUploader";
 import { uploadMultipleImages } from "../../context/fileContext/fileActions";
 import { formatPrice } from "../../utils/priceUtils";
 
-function UpsertAdModal({show, handleClose}) {
+function UpsertAdModal({show, handleClose, isUpdateModal, adData}) {
 
+    console.log(adData);
     const {showAlert} = useContext(AlertContext);
     const [values, setValues] = useState({
-        title: '',
-        vType: 'Car',
-        description: '',
-        price: '',
-        location: '',
-        contact: '',
+        title: !isUpdateModal ? '' : adData.title,
+        vType: !isUpdateModal ? 'Car' : adData.type.charAt(0).toUpperCase() + adData.type.slice(1),
+        description: !isUpdateModal ? '' : adData.description,
+        price: !isUpdateModal ? '' : adData.price,
+        location: !isUpdateModal ? '' : adData.location,
+        contact: !isUpdateModal ? '' : adData.contact,
         error: '',
         loading: false
     });
     let {title, vType, description, price, location, contact, error, loading} = values;
-    let [images, setImages] = useState([]);
+    let [images, setImages] = useState(isUpdateModal && adData?.images ? adData.images : []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!images.length) {
+        if (!images?.length) {
             setValues({...values, error: 'At least 1 image of your ad must be provided.'});
             return;
         }
@@ -41,23 +42,41 @@ function UpsertAdModal({show, handleClose}) {
         }
 
         try {
-            
             setValues({...values, loading: true});
+            let isAdUpserted;
+            let imgs;
 
-            const imgs = await uploadMultipleImages(images, 'ads');
+            if (images?.length) {
+                imgs = await uploadMultipleImages(images, 'ads');
+            }
 
-            const isAdCreated = await createAd({
-                title,
-                vType,
-                description,
-                contact,
-                price,
-                location,
-                imgs
-            });
+            if (!isUpdateModal) {
+                isAdUpserted = await createAd({
+                    title,
+                    vType,
+                    description,
+                    contact,
+                    price,
+                    location,
+                    imgs
+                });
+            } else {
+                const docForUpdate = {
+                    title,
+                    vType,
+                    description,
+                    contact,
+                    price,
+                    location
+                }
+                if (imgs) {
+                    docForUpdate.imgs = imgs;
+                }
+                isAdUpserted = await updateAd(adData.id, docForUpdate);
+            }
 
-            if (isAdCreated) {
-                showAlert('Your ad has been created!');
+            if (isAdUpserted) {
+                showAlert(`Your ad has been ${isUpdateModal ? 'updated' : 'created'} successfully`);
             } else {
                 showAlert('Oops! Something went wrong, please try again!', 'danger');
             }
@@ -93,15 +112,19 @@ function UpsertAdModal({show, handleClose}) {
                 <Modal.Title>Please fill vehicle data</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            <MultipleImagesUploader onImagesUpload={handleImagesUpload} isDialogOpened={show}/>
+            <MultipleImagesUploader 
+                onImagesUpload={handleImagesUpload} 
+                isDialogOpened={show}
+                inputImages={adData?.images.map(img => img.url)}
+            />
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="title">Title</Form.Label>
-                    <Form.Control required onChange={handleOnChange} id="title" name='title' placeholder="Enter vehicle title" />
+                    <Form.Control value={title} required onChange={handleOnChange} id="title" name='title' placeholder="Enter vehicle title" />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="vType">Vehicle type</Form.Label>
-                    <Form.Select required onChange={handleOnChange} name='vType' id="vType">
+                    <Form.Select required onChange={handleOnChange} name='vType' id="vType" value={vType}>
                         <option>Car</option>
                         <option>Motorcycle</option>
                         <option>Bike</option>
@@ -109,15 +132,15 @@ function UpsertAdModal({show, handleClose}) {
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="description">Description</Form.Label>
-                    <Form.Control required onChange={handleOnChange} as="textarea" rows={7} id="description" name='description' placeholder="Enter vehicle description" />
+                    <Form.Control value={description} required onChange={handleOnChange} as="textarea" rows={7} id="description" name='description' placeholder="Enter vehicle description" />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="location">Location</Form.Label>
-                    <Form.Control required onChange={handleOnChange} id="location" name='location' placeholder="Enter vehicle location" />
+                    <Form.Control value={location} required onChange={handleOnChange} id="location" name='location' placeholder="Enter vehicle location" />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="contact">Contact number</Form.Label>
-                    <Form.Control required onChange={handleOnChange} id="contact" name='contact' placeholder="Enter contact number" />
+                    <Form.Control value={contact} required onChange={handleOnChange} id="contact" name='contact' placeholder="Enter contact number" />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="price">Price</Form.Label>
@@ -128,7 +151,7 @@ function UpsertAdModal({show, handleClose}) {
                     Close
                 </Button>
                 <Button className='ml-1' disabled={loading} variant="primary" type="submit">
-                    Create ad
+                    {isUpdateModal ? 'Updated Ad' : 'Create Ad'}
                 </Button>
             </Form>
             </Modal.Body>
