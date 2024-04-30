@@ -12,7 +12,9 @@
 
 .custom-card-img {
     width: 100%;
-    max-height: 200px !important;
+    height: 250px;
+    max-height: 250px !important;
+    object-fit: cover;
 }
 
 .custom-cards-wrapper {
@@ -43,4 +45,8 @@
 .card-sold {
     opacity: 0.7;
     position: relative;
+}
+
+.custom-button {
+    margin-left: 10px !important;
 }

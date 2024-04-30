@@ -33,9 +33,10 @@ export const AlertProvider = ({children}) => {
                 autohide
                 bg={state.variant}
                 style={{
-                    position: 'absolute',
+                    position: 'fixed',
                     top: 20,
-                    left: '40%'
+                    left: '40%',
+                    textAlign: 'center'
                 }}>
                     <Toast.Body>{state.message}</Toast.Body>
             </Toast>

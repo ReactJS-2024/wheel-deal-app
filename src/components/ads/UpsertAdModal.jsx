@@ -1,14 +1,15 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { createAd, getAllAds, updateAd } from "../../context/adContext/adActions";
 import AlertContext from "../../context/alertContext/AlertContext";
 import MultipleImagesUploader from "../shared/MultipleImagesUploader";
 import { uploadMultipleImages } from "../../context/fileContext/fileActions";
 import { formatPrice } from "../../utils/priceUtils";
+import './ads.css';
 
 function UpsertAdModal({show, handleClose, isUpdateModal, adData}) {
 
-    console.log(adData);
+    const [isNewImagesUploaded, setIsNewImagesUploaded] = useState(false);
     const {showAlert} = useContext(AlertContext);
     const [values, setValues] = useState({
         title: !isUpdateModal ? '' : adData.title,
@@ -21,15 +22,10 @@ function UpsertAdModal({show, handleClose, isUpdateModal, adData}) {
         loading: false
     });
     let {title, vType, description, price, location, contact, error, loading} = values;
-    let [images, setImages] = useState(isUpdateModal && adData?.images ? adData.images : []);
+    const [images, setImages] = useState(adData ? adData.images : []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!images?.length) {
-            setValues({...values, error: 'At least 1 image of your ad must be provided.'});
-            return;
-        }
 
         if (!title || !description || !price || !location || !contact) {
             setValues({...values, error: 'All fields are mandatory.'});
@@ -44,10 +40,15 @@ function UpsertAdModal({show, handleClose, isUpdateModal, adData}) {
         try {
             setValues({...values, loading: true});
             let isAdUpserted;
-            let imgs;
+            let uploadedImages = images;
 
-            if (images?.length) {
-                imgs = await uploadMultipleImages(images, 'ads');
+            if (isNewImagesUploaded) {
+                uploadedImages = await uploadMultipleImages(images);
+            }
+
+            if (!uploadedImages?.length) {
+                setValues({...values, error: 'At least 1 image of your ad must be provided.'});
+                return;
             }
 
             if (!isUpdateModal) {
@@ -58,7 +59,7 @@ function UpsertAdModal({show, handleClose, isUpdateModal, adData}) {
                     contact,
                     price,
                     location,
-                    imgs
+                    imgs: uploadedImages
                 });
             } else {
                 const docForUpdate = {
@@ -67,10 +68,8 @@ function UpsertAdModal({show, handleClose, isUpdateModal, adData}) {
                     description,
                     contact,
                     price,
-                    location
-                }
-                if (imgs) {
-                    docForUpdate.imgs = imgs;
+                    location,
+                    imgs: isNewImagesUploaded ? uploadedImages : []
                 }
                 isAdUpserted = await updateAd(adData.id, docForUpdate);
             }
@@ -80,7 +79,13 @@ function UpsertAdModal({show, handleClose, isUpdateModal, adData}) {
             } else {
                 showAlert('Oops! Something went wrong, please try again!', 'danger');
             }
-            setValues({...values, loading: false});
+            
+            if (isUpdateModal) {
+                setValues({...values, loading: false});
+            } else {
+                setValues({...values, title: '', description: '', price: '', contact: '', vType: 'Car', location: '', loading: false});
+            }
+            setIsNewImagesUploaded(false);
             handleClose();
 
         } catch (err) {
@@ -89,8 +94,13 @@ function UpsertAdModal({show, handleClose, isUpdateModal, adData}) {
 
     }
 
-    const handleImagesUpload = (images) => {
-        setImages(images);
+    const handleImagesUpload = (newImages) => {
+        setImages(newImages);
+        setIsNewImagesUploaded(true);
+    };
+
+    const handleImagesRemove = () => {
+        setImages([]);
     }
 
     const handleOnChange = (e) => {
@@ -116,6 +126,7 @@ function UpsertAdModal({show, handleClose, isUpdateModal, adData}) {
                 onImagesUpload={handleImagesUpload} 
                 isDialogOpened={show}
                 inputImages={adData?.images.map(img => img.url)}
+                onImagesRemove={handleImagesRemove}
             />
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
@@ -150,7 +161,7 @@ function UpsertAdModal({show, handleClose, isUpdateModal, adData}) {
                 <Button variant="secondary" onClick={handleClose} >
                     Close
                 </Button>
-                <Button className='ml-1' disabled={loading} variant="primary" type="submit">
+                <Button className='custom-button' disabled={loading} variant="primary" type="submit">
                     {isUpdateModal ? 'Updated Ad' : 'Create Ad'}
                 </Button>
             </Form>

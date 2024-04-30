@@ -2,14 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { Carousel, Button } from "react-bootstrap"
 import { IoIosImages } from "react-icons/io";
 
-function MultipleImagesUploader({onImagesUpload, isDialogOpened, inputImages}) {
+function MultipleImagesUploader({onImagesUpload, isDialogOpened, inputImages, onImagesRemove}) {
 
-    console.log(inputImages)
+
     let [images, setImages] = useState(inputImages?.length ? inputImages : []);
     const inputFileRef = useRef(null);
 
     const triggerFileInput = () => {
         inputFileRef.current.click();
+    }
+
+    const handleImagesRemove = () => {
+        setImages([]);
+        onImagesRemove();
     }
 
     const handleImagesUpload = (e) => {
@@ -49,7 +54,7 @@ function MultipleImagesUploader({onImagesUpload, isDialogOpened, inputImages}) {
                             </Carousel.Item>
                         ))}
                     </Carousel>
-                    <Button className="btn mb-4 mt-1 btn-danger" onClick={() => setImages([])}>Remove images</Button>
+                    <Button className="btn mb-4 mt-1 btn-danger" onClick={handleImagesRemove}>Remove images</Button>
                 </>
             :
                 <div className="mx-auto d-flex flex-column align-items-center mb-4">
