@@ -7,6 +7,7 @@ import AlertContext from "../../context/alertContext/AlertContext";
 import ProfileContext from "../../context/profileContext/ProfileContext";
 import ActionTypes from "../../context/profileContext/profileActionTypes";
 import ConfirmPassword from "../auth/ConfirmPassword";
+import { auth } from "../../fbConfig";
 
 function BasicData({user}) {
 
@@ -75,6 +76,12 @@ function BasicData({user}) {
 
     if (!user || Object.keys(user).length === 0) {
         return <NoDataMsg messageText='No Data found...' />
+    }
+
+    if (auth.currentUser.uid !== user.uid) {
+        <div className="container d-flex justify-content-center">
+            <h3>{user.userName}, member since {convertFBTimestampToDate(user.createdAt)}</h3>
+        </div>
     }
 
     return (

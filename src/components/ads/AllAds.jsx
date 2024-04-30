@@ -10,25 +10,29 @@ import { auth } from "../../fbConfig";
 function AllAds({fetchUserAds, userId}) {
 
     const [adsList, setAdsList] = useState([]);
-    const {dispatch} = useContext(AdContext);
+    const {dispatch, adsFilter} = useContext(AdContext);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        setIsLoading(true);
         let unsubscribe;
         if (fetchUserAds) {
-            unsubscribe = subscribeToAdsForUser(userId, (fetchedAds) => {
+            unsubscribe = subscribeToAdsForUser(userId, adsFilter, (fetchedAds) => {
                 dispatch({
                     type: ActionTypes.SET_ADS_FOR_USER,
                     payload: fetchedAds
                 });
                 setAdsList(fetchedAds);
+                setIsLoading(false);
             });
         } else {
-            unsubscribe = subscribeToAllAds((fetchedAds) => {
+            unsubscribe = subscribeToAllAds(adsFilter, (fetchedAds) => {
                 dispatch({
                     type: ActionTypes.SET_ALL_ADS,
                     payload: fetchedAds
                 });
                 setAdsList(fetchedAds);
+                setIsLoading(false);
             });
         }
         return () => unsubscribe();
@@ -59,7 +63,11 @@ function AllAds({fetchUserAds, userId}) {
         }
         fetchData();
         */
-    }, [userId, dispatch]);
+    }, [userId, adsFilter, dispatch]);
+
+    if (isLoading) {
+        return <h1 style={{textAlign: 'center'}}>Spinner Placeholder</h1>
+    }
 
     if (!adsList?.length) {
         return <NoDataMsg messageText='Data is loading...' />

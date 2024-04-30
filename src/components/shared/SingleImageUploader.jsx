@@ -6,7 +6,7 @@ import { TbPhotoUp } from "react-icons/tb";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { ref } from "firebase/storage";
-import { storage } from "../../fbConfig";
+import { auth, storage } from "../../fbConfig";
 import { removeSingleImage, uploadSingleImage } from "../../context/fileContext/fileActions";
 import ActionTypes from "../../context/profileContext/profileActionTypes";
 import './shared.css';
@@ -97,34 +97,37 @@ function SingleImageUploader({data, collection, objectName}) {
                     <TbPhotoUp size={150} className="py-2"/>
                 }
             </Card>
-            <Dropdown className='mt-1'>
-                <Dropdown.Toggle variant="info" id="photo-dropdown-actions">
-                    Profile Image
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                    <Dropdown.Item className="custom-dp-item" onClick={triggerFileInput}>
-                        <label className="custom-dp-item">
-                            <MdOutlineFileUpload className="custom-dp-item" size={20} /> Upload new Image
-                        </label>
-                    </Dropdown.Item>
-                    <input 
-                        type="file"
-                        id="image"
-                        ref={inputFileRef}
-                        accept="image/*"
-                        style={{display: 'none'}}
-                        onChange={handleImageUpload}
-                    />
-                    {
-                        img &&  
-                            <Dropdown.Item onClick={handleImageRemove}>
+            {
+                auth.currentUser.uid === user.uid &&
+                    <Dropdown className='mt-1'>
+                        <Dropdown.Toggle variant="info" id="photo-dropdown-actions">
+                            Profile Image
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item className="custom-dp-item" onClick={triggerFileInput}>
                                 <label className="custom-dp-item">
-                                    <MdOutlineDeleteForever size={20} /> Remove Image
+                                    <MdOutlineFileUpload className="custom-dp-item" size={20} /> Upload new Image
                                 </label>
                             </Dropdown.Item>
-                    }   
-                </Dropdown.Menu>
-            </Dropdown>
+                            <input 
+                                type="file"
+                                id="image"
+                                ref={inputFileRef}
+                                accept="image/*"
+                                style={{display: 'none'}}
+                                onChange={handleImageUpload}
+                            />
+                            {
+                                img &&  
+                                    <Dropdown.Item onClick={handleImageRemove}>
+                                        <label className="custom-dp-item">
+                                            <MdOutlineDeleteForever size={20} /> Remove Image
+                                        </label>
+                                    </Dropdown.Item>
+                            }   
+                        </Dropdown.Menu>
+                    </Dropdown>
+            }
        </>
     );
 }

@@ -20,6 +20,11 @@ const adReducer = (state, action) => {
             return {
                 ...state
             }
+        case ActionTypes.SET_ADS_FILTER:
+            return {
+                ...state,
+                adsFilter: action.payload,
+            }
        default:
            return state;
    }

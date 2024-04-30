@@ -1,7 +1,15 @@
-import { Container, Modal, Row, Col, Carousel, Button } from "react-bootstrap"
+import { Container, Modal, Row, Col, Carousel, Button, OverlayTrigger, Tooltip } from "react-bootstrap"
 import { formatPrice } from "../../utils/priceUtils"
+import { Link } from "react-router-dom";
 
 function AdDetails({show, handleClose, adData}) {
+
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+          Visit Profile
+        </Tooltip>
+    );
+
     return (
         <Modal
             show={show}
@@ -14,9 +22,36 @@ function AdDetails({show, handleClose, adData}) {
                 <Modal.Body>
                     <Container>
                         <Row>
-                            <Col xs={12} md={8}>
-                            <h3>{adData.title}</h3>
+                            <Col md={8} xs={12}>
+                                {
+                                    adData.user &&
+                                        <OverlayTrigger
+                                            placement="right"
+                                            delay={{ show: 250, hide: 400 }}
+                                            overlay={renderTooltip}>
+                                                <h5 className="text-success">
+                                                    Ad created by: 
+                                                        <Link 
+                                                            className="text-success"
+                                                            style={{textDecoration: 'none'}} 
+                                                            to={`/profile/${adData.user.uid}`}>
+                                                                {' '} {adData.user.userName}
+                                                        </Link>
+                                                </h5>
+                                        </OverlayTrigger>
+                                }
                             </Col>
+                        </Row>
+                    </Container>
+                    <Container>
+                        <Row>
+                            <Col xs={12} md={8}>
+                                <h3>{adData.title}</h3>
+                            </Col>
+                            {/* Nije potrebno */}
+                            {/* <Col>
+                                <Image src={adData.user.photoUrl} thumbnail />
+                            </Col> */}
                             <Col xs={6} md={4}>
                                 <h3 className="text-success">{formatPrice(adData.price)} €</h3>
                             </Col>

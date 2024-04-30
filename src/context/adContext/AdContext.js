@@ -7,7 +7,8 @@ export const AdProvider = ({children}) => {
   
    const initState = {
        allAds: [],
-       adsForUser: []
+       adsForUser: [],
+       adsFilter: {}
    }
 
    const [state, dispatch] = useReducer(adReducer, initState);

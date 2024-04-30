@@ -8,6 +8,7 @@ import BasicData from "../components/profile/BasicData";
 import NoDataMsg from "../components/shared/NoDataMsg";
 import SingleImageUploader from "../components/shared/SingleImageUploader";
 import AllAds from "../components/ads/AllAds";
+import { auth } from "../fbConfig";
 
 
 function Profile() {
@@ -45,13 +46,16 @@ function Profile() {
                     <Container className="py-4 custom-profile-wrapper">
                         <Row>
                             <Col xs={12} md={8}>
-                                <BasicData user={user} />
+                                <BasicData
+                                    user={user}
+                                />
                             </Col>
                             <Col xs={12} md={4}>
                                 <SingleImageUploader 
                                     data={user} 
                                     collection='profile' 
-                                    objectName='users' 
+                                    objectName='users'
+                                    loggedUserId={auth.currentUser.uid}
                                 />
                             </Col>
                         </Row>
