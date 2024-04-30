@@ -63,7 +63,10 @@ function Profile() {
                         </Row>
                         <h1 className="text-center my-5">Your ads</h1>
                         <div className="d-flex justify-content-evenly mb-4">
-                            <NewAd/>
+                            {
+                                auth.currentUser.uid === user.uid &&
+                                    <NewAd/>
+                            }
                             <AdFilters isSoldFilterVisible={true} />
                         </div>
                         <hr className="w-50 mx-auto" />
