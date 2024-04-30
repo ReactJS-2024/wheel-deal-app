@@ -70,7 +70,7 @@ function AllAds({fetchUserAds, userId}) {
     }
 
     if (!adsList?.length) {
-        return <NoDataMsg messageText='Data is loading...' />
+        return <NoDataMsg messageText='No Data available ...' />
     }
 
     return (

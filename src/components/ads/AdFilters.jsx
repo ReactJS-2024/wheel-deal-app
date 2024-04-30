@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import { Timestamp } from "firebase/firestore";
 
 
-function AdFilters() {
+function AdFilters({isSoldFilterVisible}) {
     const [selectedFilter, setSelectedFilter] = useState({});
     const {dispatch} = useContext(AdContext);
 
@@ -19,7 +19,7 @@ function AdFilters() {
     }, [selectedFilter]);
 
     const selectedFilterHandler = (filterType, filterValue) => {
-        // TODO re-faktorisati
+
         if (filterType === 'resetFilter') {
             dispatch({
                 type: ActionTypes.SET_ADS_FILTER,
@@ -32,7 +32,7 @@ function AdFilters() {
                 daysAgo.setDate(daysAgo.getDate() - filterValue);
                 const daysAgoTimestamp = Timestamp.fromDate(daysAgo);
                 filterValue = daysAgoTimestamp;
-            }
+            } 
 
             filterConfig = {
                 [filterType]: filterValue
@@ -48,6 +48,32 @@ function AdFilters() {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
+                <Dropdown>
+                    <DropdownButton
+                        as={ButtonGroup}
+                        id={`dropdown-button-drop-end`}
+                        drop='end'
+                        variant="light"
+                        title='Vehicle type'>
+                            <Dropdown.Item onClick={() => selectedFilterHandler('type', 'car')}>Cars</Dropdown.Item>
+                            <Dropdown.Item onClick={() => selectedFilterHandler('type', 'motorcycle')}>Motorcycles</Dropdown.Item>
+                            <Dropdown.Item onClick={() => selectedFilterHandler('type', 'bike')}>Bikes</Dropdown.Item>
+                    </DropdownButton>
+                </Dropdown>
+                {
+                    isSoldFilterVisible &&
+                        <Dropdown>
+                            <DropdownButton
+                                as={ButtonGroup}
+                                id={`dropdown-button-drop-end`}
+                                drop='end'
+                                variant="light"
+                                title='Sold status'>
+                                    <Dropdown.Item onClick={() => selectedFilterHandler('isSold', true)}>Sold</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => selectedFilterHandler('isSold', false)}>Available</Dropdown.Item>
+                            </DropdownButton>
+                        </Dropdown>
+                }
                 <DropdownButton
                         as={ButtonGroup}
                         id={`dropdown-button-drop-end`}

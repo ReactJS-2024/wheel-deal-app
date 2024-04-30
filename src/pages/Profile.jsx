@@ -9,6 +9,7 @@ import NoDataMsg from "../components/shared/NoDataMsg";
 import SingleImageUploader from "../components/shared/SingleImageUploader";
 import AllAds from "../components/ads/AllAds";
 import { auth } from "../fbConfig";
+import AdFilters from "../components/ads/AdFilters";
 
 
 function Profile() {
@@ -60,6 +61,9 @@ function Profile() {
                             </Col>
                         </Row>
                         <h1 className="text-center my-5">Your ads</h1>
+                        <div className="d-flex justify-content-center mb-4">
+                            <AdFilters isSoldFilterVisible={true} />
+                        </div>
                         <AllAds fetchUserAds={true} userId={id} />
                     </Container>
                 : 

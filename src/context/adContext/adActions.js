@@ -123,15 +123,34 @@ export const getAdsForUser = async (userId) => {
  * @returns {function} unsubscribe function
  */
 export const subscribeToAdsForUser = (userId, adsFilter, onAdsReceived) => {
-    const q = query(
+    let q = query(
         collection(db, 'ads'),
         where('createdBy', '==', userId)
     );
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    if (adsFilter) {
+        Object.keys(adsFilter).forEach(filterKey => {
+            q = filterKey === 'publishedAt'
+                ? query(q, where(filterKey, '>=', adsFilter[filterKey]))
+                : query(q, where(filterKey, '==', adsFilter[filterKey]))
+        });
+    }
+
+    const unsubscribe = onSnapshot(q, async (querySnapshot) => {
         const adsForUser = querySnapshot.docs
             .map(doc => ({id: doc.id, ...doc.data()}));
-        onAdsReceived(adsForUser);
+        const creatorsIds = [...new Set(adsForUser.map(ad => ad.createdBy))]; // niz unikatnih ID-eva kreatora svih ogalsa
+        const userPromises = creatorsIds.map(fetchUser);
+        const users = await Promise.all(userPromises);
+        const usersById = users.reduce((acc, user) => {
+            acc[user.uid] = user; 
+            return acc;
+        }, {});
+        const allAdsWithCreatorDetails = adsForUser.map(ad => ({
+            ...ad,
+            user: usersById[ad.createdBy]
+        }));
+        onAdsReceived(allAdsWithCreatorDetails);
     }, (error) => {
         console.log(error);
     });
