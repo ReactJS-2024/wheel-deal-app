@@ -46,11 +46,10 @@ function UpsertAdModal({show, handleClose, isUpdateModal, adData}) {
                 uploadedImages = await uploadMultipleImages(images);
             }
             
-            // TODO popraviti
-            // if (!uploadedImages?.length) {
-            //     setValues({...values, error: 'At least 1 image of your ad must be provided.'});
-            //     return;
-            // }
+            if (!uploadedImages?.length) {
+                setValues({...values, error: 'At least 1 image of your ad must be provided.'});
+                return;
+            }
 
             if (!isUpdateModal) {
                 isAdUpserted = await createAd({

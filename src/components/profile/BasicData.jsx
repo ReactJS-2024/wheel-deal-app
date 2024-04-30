@@ -79,8 +79,8 @@ function BasicData({user}) {
     }
 
     if (auth.currentUser.uid !== user.uid) {
-        <div className="container d-flex justify-content-center">
-            <h3>{user.userName}, member since {convertFBTimestampToDate(user.createdAt)}</h3>
+        return <div className="container d-flex justify-content-center">
+            <p className="text-light bg-dark h5">Profile of user: {user.userName}, member since {convertFBTimestampToDate(user.createdAt)}</p>
         </div>
     }
 
