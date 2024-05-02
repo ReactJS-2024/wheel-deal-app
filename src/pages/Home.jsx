@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import './pages.css';
+import { auth } from "../fbConfig";
 
 function Home() {
  return (
@@ -18,7 +19,7 @@ function Home() {
                <p>Ready to embark on your next automotive adventure? Join the Wheel Deal community today and experience the difference. Whether you're buying, selling, or just browsing, we're here to support you every step of the way.</p>
            </div>
            <p className="lead">
-               <Link to='/auth/register' className="btn btn-primary btn-lg">Join our community</Link>
+               <Link to={auth.currentUser ? '/ads' : '/auth/register'} className="btn btn-primary btn-lg">Join our community</Link>
            </p>
        </div>
    </>
