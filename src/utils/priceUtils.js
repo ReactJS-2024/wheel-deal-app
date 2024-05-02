@@ -21,5 +21,24 @@ const formatPrice = (price) => {
     const numericValue = price.replace(/[^0-9]/g, '');
     return new Intl.NumberFormat('de-DE').format(numericValue);
 }
+
+/**
+ * @description Converts string price to number price
+ * @param {string} price - price to convert
+ * @returns {number} number format price
+ */
+const convertPriceStringToNumber = (price) => {
+    return +(price.replace(/\./g, '')); // 24.000 => 24000
+}
+
+const euroCurrencyValueFormatterToNumber = (value) => {
+    const numericValue = +(value.replace('.', ''));
+    const formatter = new Intl.NumberFormat('de-DE', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 0,
+    });
+    return formatter.format(numericValue);
+}
  
-export {euroCurrencyValueFormatter, formatPrice};
+export {euroCurrencyValueFormatter, formatPrice, convertPriceStringToNumber, euroCurrencyValueFormatterToNumber};

@@ -16,34 +16,39 @@ import ProtectedRoute from './components/shared/ProtectedRoute';
 import PublicRoute from './components/shared/PublicRoute';
 import Ads from './components/ads/Ads';
 import { AdProvider } from './context/adContext/AdContext';
+import { StatsProvider } from './context/statsContext/StatsContext';
+import Stats from './pages/Stats';
 
 
 function App() {
   return (
     <AlertProvider>
       <AdProvider>
-        <ProfileProvider>
-          <AuthProvider>
-            <Router>
-              <CustomNavbar/>
-              <Routes>
-                <Route element={<PublicRoute/>}>
-                  <Route exact path='/auth/register' element={<Register />} />
-                  <Route exact path='/auth/login' element={<Login />} />
-                  <Route exact path='/auth/forgot-password' element={<ForgotPassword />} />
-                </Route>
-                <Route exact path='/' element={<Home />} />
-                <Route exact path='/home' element={<Home />} />
-                <Route element={<ProtectedRoute/>}>
-                  <Route exact path='/profile/:id' element={<Profile />} />
-                  <Route exact path='/ads' element={<Ads />} />
-                </Route>      
-                <Route path='/*' element={<NotFound />} />
-              </Routes>
-              <CustomFooter/>
-            </Router>
-          </AuthProvider>
-        </ProfileProvider>
+        <StatsProvider>
+          <ProfileProvider>
+            <AuthProvider>
+              <Router>
+                <CustomNavbar/>
+                <Routes>
+                  <Route element={<PublicRoute/>}>
+                    <Route exact path='/auth/register' element={<Register />} />
+                    <Route exact path='/auth/login' element={<Login />} />
+                    <Route exact path='/auth/forgot-password' element={<ForgotPassword />} />
+                  </Route>
+                  <Route exact path='/' element={<Home />} />
+                  <Route exact path='/home' element={<Home />} />
+                  <Route element={<ProtectedRoute/>}>
+                    <Route exact path='/profile/:id' element={<Profile />} />
+                    <Route exact path='/ads' element={<Ads />} />
+                    <Route exact path='/stats' element={<Stats />} />
+                  </Route>      
+                  <Route path='/*' element={<NotFound />} />
+                </Routes>
+                <CustomFooter/>
+              </Router>
+            </AuthProvider>
+          </ProfileProvider>
+        </StatsProvider>
       </AdProvider>
     </AlertProvider>
   );

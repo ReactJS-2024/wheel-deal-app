@@ -33,9 +33,9 @@ function AdCard({cardData, isEditEnabled}) {
         }
     }
 
-    const onMarkedAsSold = (adId) => {
+    const onMarkedAsSold = (cardData) => {
         if (window.confirm('Please confirm marking ad as sold')) {
-            const isSold = updateAsSold(adId);
+            const isSold = updateAsSold(cardData);
             const alertMsg = isSold ? 'Congratulations! You have sold your vehicle!' : 'Oops, something went wrong. Please try again.';
             const alertType = isSold ? 'success' : 'danger';
             showAlert(alertMsg, alertType);
@@ -68,7 +68,7 @@ function AdCard({cardData, isEditEnabled}) {
                                         <Dropdown.Item onClick={() => onDeleteAd(cardData.id)}>
                                             Delete Ad
                                         </Dropdown.Item>
-                                        <Dropdown.Item onClick={() => onMarkedAsSold(cardData.id)}>
+                                        <Dropdown.Item onClick={() => onMarkedAsSold(cardData)}>
                                             Mark as Sold
                                         </Dropdown.Item>
                                     </Dropdown.Menu>

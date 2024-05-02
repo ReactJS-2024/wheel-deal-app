@@ -70,6 +70,7 @@ function CustomNavbar() {
                   <Nav.Link as={Link} to='/' onClick={() => setShowOffNavbar(false)}>Home</Nav.Link>
                   {isAuthenticated && <Nav.Link as={Link} to='/ads' onClick={() => setShowOffNavbar(false)}>Ads</Nav.Link>}
                   {isAuthenticated && <Nav.Link as={Link} to={`profile/${auth.currentUser?.uid}`} onClick={() => setShowOffNavbar(false)}>Profile</Nav.Link>}
+                  {isAuthenticated && <Nav.Link as={Link} to='/stats' onClick={() => setShowOffNavbar(false)}>Your selling stats</Nav.Link>}
                   <NavDropdown
                     title="User actions"
                     id={`offcanvasNavbarDropdown-expand-${false}`}>

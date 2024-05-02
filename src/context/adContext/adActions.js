@@ -191,14 +191,20 @@ export const updateAd = async (adId, adData) => {
 
 /**
  * @description Async handler for marking ad as sold
- * @param {string} adId - ad id 
+ * @param {object} adData - ad data
  * @returns {boolean} true if updated as sold, udnefined otherwise
  */
-export const updateAsSold = async (adId) => {
-    const adRef = doc(db, 'ads', adId);
+export const updateAsSold = async (adData) => {
+    const {id} = adData;
+    const adRef = doc(db, 'ads', id);
     try {
         await updateDoc(adRef, {
             isSold: true
+        });
+        await addDoc(collection(db, 'stats'), {
+            ad: adData,
+            soldBy: auth.currentUser.uid,
+            soldTimestamp: Timestamp.fromDate(new Date())
         });
         return true;
     } catch (error) {
