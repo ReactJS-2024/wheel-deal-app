@@ -112,7 +112,8 @@ function AdDetails({show, handleClose, adData}) {
                     <img
                         alt={selectedImage}
                         src={selectedImage}
-                        width="500"
+                        width='500'
+                        height='500'
                     />
                 </ControlledZoom>
             </Modal>
