@@ -50,3 +50,7 @@
 .custom-button {
     margin-left: 10px !important;
 }
+
+.custom-carousel-item:hover {
+    cursor: pointer;
+}
