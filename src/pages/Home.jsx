@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import './pages.css';
 
 function Home() {
  return (
    <>
-       <div className="jumbotron p-5">
+       <div className="jumbotron p-5 custom-home-wrapper">
            <h1 className="display-4">Welcome to Wheel Deal!</h1>
            <p className="lead">Most visited car selling website in our region.</p>
            <hr className="my-4"/>

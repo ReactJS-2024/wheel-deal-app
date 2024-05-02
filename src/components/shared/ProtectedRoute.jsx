@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import AuthContext from "../../context/authContext/AuthContext";
-import NoDataMsg from "./NoDataMsg";
+import CustomSpinner from "./Spinner";
 
 
 function ProtectedRoute() {
@@ -9,7 +9,7 @@ function ProtectedRoute() {
     const { isAuthenticated, checkingStatus } = useContext(AuthContext);
     
     if (checkingStatus) {
-        return <NoDataMsg messageText='Data is loading' />;
+        return <CustomSpinner/>
     }
 
     if (!isAuthenticated) {

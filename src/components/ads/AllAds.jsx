@@ -5,6 +5,7 @@ import ActionTypes from "../../context/adContext/adActionTypes";
 import NoDataMsg from "../shared/NoDataMsg";
 import AdCard from "./AdCard";
 import { auth } from "../../fbConfig";
+import CustomSpinner from "../shared/Spinner";
 
 
 function AllAds({fetchUserAds, userId}) {
@@ -66,11 +67,11 @@ function AllAds({fetchUserAds, userId}) {
     }, [userId, adsFilter, dispatch]);
 
     if (isLoading) {
-        return <h1 style={{textAlign: 'center'}}>Spinner Placeholder</h1>
+        return <CustomSpinner />
     }
 
     if (!adsList?.length) {
-        return <NoDataMsg messageText='No Data available ...' />
+        return <NoDataMsg messageText='No Data found' />
     }
 
     return (

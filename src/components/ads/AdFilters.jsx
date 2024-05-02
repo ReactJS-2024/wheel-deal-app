@@ -68,7 +68,7 @@ function AdFilters({isSoldFilterVisible}) {
                                 id={`dropdown-button-drop-end`}
                                 drop='end'
                                 variant="light"
-                                title='Sold status'>
+                                title='Availability'>
                                     <Dropdown.Item onClick={() => selectedFilterHandler('isSold', true)}>Sold</Dropdown.Item>
                                     <Dropdown.Item onClick={() => selectedFilterHandler('isSold', false)}>Available</Dropdown.Item>
                             </DropdownButton>

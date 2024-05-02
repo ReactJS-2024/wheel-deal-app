@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import AuthContext from "../../context/authContext/AuthContext";
+import CustomSpinner from "./Spinner";
 
 function PublicRoute() {
     const { isAuthenticated, checkingStatus } = useContext(AuthContext);
@@ -13,7 +14,7 @@ function PublicRoute() {
     }, [checkingStatus]);
 
     if (!readyToRender) {
-        return <h1>Spinner Placeholder</h1>
+        return <CustomSpinner />
     }
 
     if (isAuthenticated) {

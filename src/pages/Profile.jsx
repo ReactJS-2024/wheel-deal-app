@@ -5,12 +5,12 @@ import { fetchUser } from "../context/profileContext/profileActions";
 import ActionTypes from "../context/profileContext/profileActionTypes";
 import { Col, Container, Row } from "react-bootstrap";
 import BasicData from "../components/profile/BasicData";
-import NoDataMsg from "../components/shared/NoDataMsg";
 import SingleImageUploader from "../components/shared/SingleImageUploader";
 import AllAds from "../components/ads/AllAds";
 import { auth } from "../fbConfig";
 import AdFilters from "../components/ads/AdFilters";
 import NewAd from "../components/ads/NewAd";
+import CustomSpinner from "../components/shared/Spinner";
 
 
 function Profile() {
@@ -38,7 +38,7 @@ function Profile() {
     }, [id]);
 
     if (loading) {
-        return <NoDataMsg messageText='Data is Loading...' />
+        return <CustomSpinner />
     }
 
     return (

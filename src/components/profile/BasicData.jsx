@@ -75,7 +75,7 @@ function BasicData({user}) {
     }
 
     if (!user || Object.keys(user).length === 0) {
-        return <NoDataMsg messageText='No Data found...' />
+        return <NoDataMsg messageText='No Data found' />
     }
 
     if (auth.currentUser.uid !== user.uid) {

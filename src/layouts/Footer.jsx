@@ -1,10 +1,9 @@
-import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FaInstagram, FaLinkedin, FaPinterestP, FaFacebookF } from 'react-icons/fa';
 
 function CustomFooter() {
     return (
-        <footer className="footer mt-auto py-3 bg-light custom-footer">
+        <footer className="footer mt-auto py-3 bg-light custom-footer position-fixed bottom-0 w-100">
             <Container>
                 <Row>
                     <Col md={4} sm={12}>
